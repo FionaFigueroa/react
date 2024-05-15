@@ -65,32 +65,69 @@
 
 
     // parent component
-    function Calculator() 
-    {
+    function Calculator() {
 
-        // for the onClick event
 
-        function handleNumber(value) {
-            // alert(value);
+    // useState
+    // const [display, setDisplay] = React.useState('0');
+    //useState returns an array with 2 elements, the first element is the current state value, the second element is a function that allows you to update the state value
+    const [calc, setCalc] = React.useState({
+        current: '0',
+        total: '0',
+        isInitial: true,
+        preOp: ''
+    });
 
-            let newNum = value;
-            if(!calc.insInitial){
-        newNum = calc.current + value;
-            }
-         setCalc({current: newNum, insInitial: false});
-       }
+        function handleNumber(value){
+        // alert(value);
+        let newNum = value;
+        if(!calc.isInitial){
+            newNum = calc.current + value;
+        }
+        setCalc({current: newNum,total: calc.total, isInitial: false, preOp: calc.preOp});
+    }
     //handle clear button
     function handleClear(){
         setCalc({current: '0', insInitial: true});
     }
-
+     // function for handling the operator
+     function handleOperator(value){
+        let total = doCalculation();
+        setCalc({
+            current: total.toString(),
+            total: total.toString,
+            isInitial: true,
+            preOp: value
+        })
+    // function for calculation
+    function doCalculation(){
+        let total = parseFloat(calc.total);
+        switch(calc.preOp){
+            case '*':
+                total = total * parseFloat(calc.current);
+                break;
+            case '/':
+                total = total / parseFloat(calc.current);
+                break;
+            case '+':
+                total = total + parseFloat(calc.current);
+                break;
+            case '-':
+                total = total - parseFloat(calc.current);
+                break;
+            default:
+                total = parseFloat(calc.current);
+        }
+        return total;
+    }
+  
 
         //const [display, setDisplay] = REact.useState('0');
 
         // useState
         const [calc, setCalc] = React.useState({
             current: '0',
-            total: '',
+            total: '0',
             insInitial: true,
             preOp: ''
         });
@@ -103,29 +140,31 @@
                 <CalcButton value='7' onClick={handleNumber} />
                 <CalcButton value='8' onClick={handleNumber} />
                 <CalcButton value='9' onClick={handleNumber} />
-                <CalcButton className="operator" value="+" />
+                <CalcButton className="operator" value="+" onClick={handleOperator}/>
 
 
                 <CalcButton value='4' onClick={handleNumber} />
                 <CalcButton value='5' onClick={handleNumber} />
                 <CalcButton value='6' onClick={handleNumber} />
-                <CalcButton className="operator" value="-" />
+                <CalcButton className="operator" value="-" onClick={handleOperator}/>
 
 
                 <CalcButton value='1' onClick={handleNumber} />
                 <CalcButton value='2' onClick={handleNumber} />
                 <CalcButton value='3' onClick={handleNumber} />
-                <CalcButton className="operator" value="*" />
+                <CalcButton className="operator" value="*" onClick={handleOperator}/>
 
 
                 <CalcButton value="C" onClick={handleClear}/>
                 <CalcButton value='0' onClick={handleNumber} />
-                <CalcButton className="operator" value="=" />
-                <CalcButton className="operator" value="/" />
+                <CalcButton className="operator" value="=" onClick={handleOperator}/>
+
+                <CalcButton className="operator" value="/"onClick={handleOperator}/>
 
             </div>
         )
     }
+}
 
     //Child Component
     function CalcButton(props) {
